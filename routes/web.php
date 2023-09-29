@@ -24,7 +24,10 @@ Auth::routes();
 // Admin Routes
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
     Route::get('/', 'HomeController@index')->name('dashboard');
-    Route::resource('staffs', 'StaffsController');
+    Route::resource('users', 'UsersController');
+    Route::resource('faculties', 'FacultiesController');
+    Route::resource('departments', 'DepartmentsController');
+    Route::resource('semesters', 'SemestersController');
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
