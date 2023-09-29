@@ -15,8 +15,12 @@
     @csrf
     @method('DELETE')
     
-    <button type="button" class="btn btn-sm btn-danger delete-button" id="deleteButton" data-id="{{ $row->id }}">
-        <i class="mdi mdi-delete" aria-hidden="true"></i>
+    <button type="button" class="btn btn-sm delete-button {{ $row->status == 1 ? 'btn-danger' : 'btn-primary' }}" id="deleteButton" data-id="{{ $row->id }}">
+        @if($row->status == 1)
+        <i class="mdi mdi-account-off" aria-hidden="true"></i>
+        @else
+        <i class="mdi mdi-account-check" aria-hidden="true"></i>
+        @endif
     </button>
 </form>
 <script>
@@ -34,7 +38,7 @@
                 icon: 'warning',
                 background: '#fff',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
+                confirmButtonText: 'Yes, proceed!',
                 customClass: {
                     confirmButton: 'btn btn-danger me-3',
                     cancelButton: 'btn btn-label-primary'

@@ -19,13 +19,54 @@
   <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
   <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+  <style type="text/css">
+      i {
+        color: white;
+        /* Define a CSS animation named 'spin' */
+      }
+      @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Apply the 'spin' animation to the .mdi-reload class */
+  .mdi-reload {
+    animation: spin 2s linear infinite;
+  }
+  #pageLoader {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.7);
+        z-index: 9999;
+    }
+    
+    #loader.active {
+        display: flex; /* Display the loader with flex properties */
+        justify-content: center;
+        align-items: center;
+    }
+
+    #pageLoader i {
+        font-size: 48px; /* Adjust the size of the spinner icon */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+  </style>
   @yield('css')
 </head>
 <body>
+    
   <div class="container-scroller">
     
     <!-- partial:partials/_navbar.html -->
     @include('partials.navbar')
+
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
       <!-- partial:partials/_sidebar.html -->
@@ -47,6 +88,9 @@
                     </div>
                 </div>
             @endif
+            <div id="pageLoader" class="pageLoader">
+        <i class="mdi mdi-reload spin" style="color: black;"></i>
+    </div>
           @yield('content')
         </div>
         <!-- content-wrapper ends -->

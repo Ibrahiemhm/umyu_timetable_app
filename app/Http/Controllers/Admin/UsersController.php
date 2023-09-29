@@ -19,7 +19,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = User::all();
+            $query = User::withTrashed();
             $table = Datatables::of($query);
 
             $table->addColumn('actions', '&nbsp;');
@@ -49,7 +49,7 @@ class UsersController extends Controller
                 return $row->gender ? $row->gender : "";
             });
             $table->editColumn('status', function ($row) {
-                return $row->status ? ($row->status === 1 ? "Enabled" : "Disabled") : "";
+                return $row->status ? ($row->status == 1 ? "Enabled" : "Disabled") : "Disabled";
             });
 
             $table->rawColumns(['actions', 'image']);
@@ -130,8 +130,24 @@ class UsersController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        //
+        $user = User::where('id', $id)->withTrashed()->first();
+
+        if($user->status == 1){
+            $user->status = 0;
+            $user->update();
+            
+            if($user->delete()){
+                return response(['success', 200]);
+            }    
+        } else {
+            $user->status = 1;
+            $user->deleted_at = null;
+            $user->update();
+
+            return response(['success', 200]);
+        }
+        
     }
 }

@@ -1,8 +1,8 @@
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
   <div class="navbar-brand-wrapper d-flex justify-content-center">
     <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">  
-      <a class="navbar-brand brand-logo" href="index.html"><img src="{{ asset('images/logo.svg') }}" alt="logo"/></a>
-      <a class="navbar-brand brand-logo-mini" href="index.html"><img src="{{ asset('images/logo-mini.svg') }}" alt="logo"/></a>
+      <a class="navbar-brand brand-logo" href="/"><img src="{{ asset('images/umyu_logo-300x300.png') }}" alt="logo"/></a>
+      <a class="navbar-brand brand-logo-mini" href="/"><img src="{{ asset('images/umyu_logo-150x150.jpg') }}" alt="logo"/></a>
       <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
         <span class="mdi mdi-sort-variant"></span>
       </button>
@@ -13,7 +13,7 @@
     <ul class="navbar-nav navbar-nav-right">
       <li class="nav-item dropdown me-4">
         <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center notification-dropdown" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
-          <i class="mdi mdi-bell mx-0"></i>
+          <i class="mdi mdi-bell mx-0" style="color: black;"></i>
           <span class="count"></span>
         </a>
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="notificationDropdown">
@@ -61,7 +61,7 @@
       </li>
       <li class="nav-item nav-profile dropdown">
         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
-          <img src="{{ asset('images/faces/face5.jpg') }}" alt="profile"/>
+          <img src="{{ Auth::User()->getFirstMediaUrl('images') }}" alt="profile"/>
           <span class="nav-profile-name">{{ Auth::User()->name }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
