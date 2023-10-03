@@ -3,7 +3,11 @@
 @section('content')
 <div class="card">
     <div class="card-header">
+<<<<<<< Updated upstream
         Add Staff
+=======
+        View User
+>>>>>>> Stashed changes
     </div>
     <div class="card-body">
         <div class="row">

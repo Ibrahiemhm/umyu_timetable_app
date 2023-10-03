@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
-use Validator;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use DB;
 use Hash;
 
@@ -48,6 +49,9 @@ class UsersController extends Controller
             $table->editColumn('gender', function ($row) {
                 return $row->gender ? $row->gender : "";
             });
+            $table->editColumn('department', function ($row) {
+                return $row->department_id ? $row->department?->title : "";
+            });
             $table->editColumn('status', function ($row) {
                 return $row->status ? ($row->status === 1 ? "Enabled" : "Disabled") : "";
             });
@@ -66,7 +70,9 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        $departments = Department::where('status', 1)->select('id', 'title')->get();
+
+        return view('admin.users.create', compact('departments'));
     }
 
     /**
@@ -81,6 +87,7 @@ class UsersController extends Controller
             $user->email = $request->email;
             $user->age = $request->age;
             $user->gender = $request->gender;
+            $user->department_id = $request->department_id;
             $user->password = Hash::make('password');
             $user->role = 'user';
             if ($request->hasFile('image')) {
@@ -98,7 +105,7 @@ class UsersController extends Controller
         }
 
         $notification = array(
-            'message' => 'User added successfully'
+            'success' => 'User added successfully.'
         );
         return redirect()->route('admin.users.index')->with($notification);
     }
@@ -116,15 +123,67 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        if($user->department->status == 0){
+            $message = 'Department is disabled, can not make changes to the selected user';
+            $notification = array(
+                'error' => $message
+            );
+
+            return redirect()->back()->with($notification);
+        } else {
+            $departments = Department::where('status', 1)->select('id', 'title')->get();
+
+            return view('admin.users.edit', compact('user', 'departments'));  
+        }
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest  $request, User $user)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            // Update user information
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->age = $request->age;
+            $user->gender = $request->gender;
+            $user->department_id = $request->department_id;
+
+            // Check if a new image is uploaded
+            if ($request->hasFile('image')) {
+                // Delete the current image if it exists
+                if ($user->getFirstMedia('images')) {
+                    $user->getFirstMedia('images')->delete();
+                }
+
+                // Add and store the new image
+                $media = $user->addMediaFromRequest('image')->toMediaCollection('images');
+            }
+
+            $user->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            // Handle exceptions
+            DB::rollBack();
+
+            $message = 'Something went wrong: ' . $e->getMessage();
+            $notification = [
+                'error' => $message,
+            ];
+
+            return back()->with($notification);
+        }
+
+        $notification = [
+            'success' => 'User updated successfully.',
+        ];
+
+        return redirect()->route('admin.users.index')->with($notification);
     }
 
     /**

@@ -1,5 +1,18 @@
 @extends('layouts.app')
 
+@section('css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.select2').select2();
+});
+</script>
+@endsection
+
 @section('content')
 <div class="card">
     <div class="card-header">
@@ -59,9 +72,24 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Department</label>
+                  <div class="col-sm-9">
+                    <select class="form-control select2" name="department_id" id="department_id" required>
+                      <option selected disabled value="">Please Select</option>
+                      @foreach($departments as $department)
+                      <option value="{{ $department->id }}">{{ $department->title }}</option>
+                      @endforeach
+                    </select>
+                    @if($errors->has('department_id'))
+                        <span class="text-danger">{{ $errors->first('department_id') }}</span>
+                    @endif
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Image</label>
                   <div class="col-sm-9">
-                    <!-- <input class="form-control" type="file" name="image" id="image" /> -->
                     <input type="file" class="form-control" id="image" name="image">
                     @if($errors->has('image'))
                         <span class="text-danger">{{ $errors->first('image') }}</span>

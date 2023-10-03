@@ -15,6 +15,7 @@
                     <th>Name</th>
                     <th>Age</th>
                     <th>Gender</th>
+                    <th>Department</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -39,6 +40,7 @@
                 { data: 'name', name: 'name' },
                 { data: 'age', name: 'age' },
                 { data: 'gender', name: 'gender' },
+                { data: 'department', name: 'department' },
                 { data: 'status', name: 'status' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ]

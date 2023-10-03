@@ -1,0 +1,115 @@
+@extends('layouts.app')
+
+@section('css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.select2').select2();
+});
+</script>
+@endsection
+
+@section('content')
+<div class="card">
+    <div class="card-header">
+        Add Course
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ route('admin.courses.store') }}">
+          @foreach($errors as $error)
+          {{$error}}
+          @endforeach
+            @csrf
+            <div class="row">
+                <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Department</label>
+                  <div class="col-sm-9">
+                    <select class="form-control select2" name="department_id" id="department_id" required>
+                      <option selected disabled value="">Please Select</option>
+                      @foreach($departments as $department)
+                      <option value="{{ $department->id }}">{{ $department->title }}</option>
+                      @endforeach
+                    </select>
+                    @if($errors->has('department_id'))
+                        <span class="text-danger">{{ $errors->first('department_id') }}</span>
+                    @endif
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Course Category</label>
+                  <div class="col-sm-9">
+                    <select class="form-control select2" name="course_category_id" id="course_category_id" required>
+                      <option selected disabled value="">Please Select</option>
+                      @foreach($course_categories as $course_category)
+                      <option value="{{ $course_category->id }}">{{ $course_category->title }}</option>
+                      @endforeach
+                    </select>
+                    @if($errors->has('course_category_id'))
+                        <span class="text-danger">{{ $errors->first('course_category_id') }}</span>
+                    @endif
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Semester</label>
+                  <div class="col-sm-9">
+                    <select class="form-control select2" name="semester_id" id="semester_id" required>
+                      <option selected disabled value="">Please Select</option>
+                      @foreach($semesters as $semester)
+                      <option value="{{ $semester->id }}">{{ $semester->title }}</option>
+                      @endforeach
+                    </select>
+                    @if($errors->has('semester_id'))
+                        <span class="text-danger">{{ $errors->first('semester_id') }}</span>
+                    @endif
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Title</label>
+                  <div class="col-sm-9">
+                    <input type="text" id="title" name="title" maxlength="255" class="form-control" placeholder="Course Title" required />
+                    @if($errors->has('title'))
+                        <span class="text-danger">{{ $errors->first('title') }}</span>
+                    @endif
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Course Code</label>
+                  <div class="col-sm-9">
+                    <input type="text" maxlength="20" id="course_code" name="course_code" class="form-control" placeholder="Course Code" required />
+                    @if($errors->has('course_code'))
+                        <span class="text-danger">{{ $errors->first('course_code') }}</span>
+                    @endif
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Number of Students</label>
+                  <div class="col-sm-9">
+                    <input type="number" id="number_of_students" name="number_of_students" class="form-control" placeholder="Number of Students" required />
+                    @if($errors->has('number_of_students'))
+                        <span class="text-danger">{{ $errors->first('number_of_students') }}</span>
+                    @endif
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary mb-3" type="submit">Save</button>
+        </form>
+        
+    </div>
+</div>
+@endsection

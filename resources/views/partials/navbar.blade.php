@@ -1,8 +1,13 @@
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
   <div class="navbar-brand-wrapper d-flex justify-content-center">
     <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">  
+<<<<<<< Updated upstream
       <a class="navbar-brand brand-logo" href="index.html"><img src="{{ asset('images/logo.svg') }}" alt="logo"/></a>
       <a class="navbar-brand brand-logo-mini" href="index.html"><img src="{{ asset('images/logo-mini.svg') }}" alt="logo"/></a>
+=======
+      <a class="navbar-brand brand-logo" href="/"><img style="width: 50px; height: 50px" src="{{ asset('images/umyu_logo-300x300.png') }}" alt="logo"/></a>
+      <a class="navbar-brand brand-logo-mini" href="/"><img src="{{ asset('images/umyu_logo-150x150.jpg') }}" alt="logo"/></a>
+>>>>>>> Stashed changes
       <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
         <span class="mdi mdi-sort-variant"></span>
       </button>

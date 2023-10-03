@@ -23,6 +23,7 @@ class User extends Authenticatable implements HasMedia
         'name',
         'email',
         'gender',
+        'department_id',
         'age',
         'password',
     ];
@@ -47,11 +48,16 @@ class User extends Authenticatable implements HasMedia
         'password' => 'hashed',
     ];
 
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
     // Define the media collection (images)
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('images')
             ->useDisk('public') // You can change the disk as needed
-            ->singleFile(); // Allow only one image per staff member
+            ->singleFile(); // Allow only one image per user
     }
 }

@@ -16,7 +16,7 @@
   <!-- inject:css -->
   <link rel="stylesheet" href="{{ asset('css/style.css') }}">
   <!-- endinject -->
-  <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />
+  <link rel="shortcut icon" href="{{ asset('images/umyu_logo-150x150.jpg') }}" />
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
   <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
   @yield('css')
@@ -33,10 +33,10 @@
       <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
-            @if(session('message'))
+            @if(session('success'))
                 <div class="row mb-2">
                     <div class="col-lg-12">
-                        <div class="alert alert-success" role="alert">{{ session('message') }}</div>
+                        <div class="alert alert-success" role="alert">{{ session('success') }}</div>
                     </div>
                 </div>
             @endif

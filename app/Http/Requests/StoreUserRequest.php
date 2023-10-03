@@ -27,6 +27,7 @@ class StoreUserRequest extends FormRequest
             'age' => 'required|integer|min:18',
             'gender' => 'required|string|in:Male,Female',
             'email' => 'required|string|email|max:255|unique:users',
+            'department_id' => 'required|integer|exists:departments,id',
             'image' => [
                 'required',
                 File::image()->max(5 * 1024),

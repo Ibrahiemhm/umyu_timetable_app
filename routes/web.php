@@ -13,18 +13,42 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 Route::redirect('/', '/login');
 
 Auth::routes();
 
 // Admin Routes
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
+    // Home Controller
     Route::get('/', 'HomeController@index')->name('dashboard');
+<<<<<<< Updated upstream
     Route::resource('staffs', 'StaffsController');
 });
+=======
+>>>>>>> Stashed changes
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    // Users Controller
+    Route::resource('users', 'UsersController');
+    
+    // Beginning of Configurations Route
+    Route::group(['prefix' => 'configurations'], function () {
+        Route::resource('faculties', 'FacultiesController');
+        Route::resource('departments', 'DepartmentsController');
+        Route::resource('semesters', 'SemestersController');
+        Route::resource('course-categories', 'CourseCategoriesController');
+        Route::resource('academic-sessions', 'AcademicSessionsController');
+    });
+    // End of Configurations Route
+
+    // Courses Route
+    Route::resource('courses', 'CoursesController');
+
+    // Venue Route
+    Route::resource('venues', 'VenuesController');
+
+    // Lectures Timetable Route
+    Route::resource('lectures-timetable', 'LecturesTimetableController');
+
+    // Exam Timetable Route
+    Route::resource('exam-timetable', 'ExamTimetableController');
+});
