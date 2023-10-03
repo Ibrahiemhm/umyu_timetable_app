@@ -48,7 +48,7 @@ class DepartmentsController extends Controller
             $table->rawColumns(['actions']);
 
             return $table->make(true);
-            
+
         }
 
         return view('admin.departments.index');
@@ -74,14 +74,14 @@ class DepartmentsController extends Controller
             $message = 'Department added successfully';
             $notification = array(
                 'success' => $message
-            );    
+            );
         } else {
             $message = 'Something went wrong';
             $notification = array(
                 'error' => $message
             );
         }
-        
+
         return redirect()->route('admin.departments.index')->with($notification);
     }
 
@@ -108,9 +108,9 @@ class DepartmentsController extends Controller
         } else {
             $faculties = Faculty::where('status', 1)->select('id', 'title')->get();
 
-            return view('admin.departments.edit', compact('department', 'faculties'));    
+            return view('admin.departments.edit', compact('department', 'faculties'));
         }
-        
+
     }
 
     /**
@@ -124,14 +124,14 @@ class DepartmentsController extends Controller
             $message = 'Department updated successfully';
             $notification = array(
                 'success' => $message
-            );    
+            );
         } else {
             $message = 'Something went wrong';
             $notification = array(
                 'error' => $message
             );
         }
-        
+
         return redirect()->route('admin.departments.index')->with($notification);
     }
 
@@ -142,7 +142,7 @@ class DepartmentsController extends Controller
     {
         if($department->status == 1){
             $department->status = 0;
-            
+
             if($department->update()){
                 return response(['success', 200]);
             }

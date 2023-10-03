@@ -44,7 +44,7 @@ class FacultiesController extends Controller
             $table->rawColumns(['actions']);
 
             return $table->make(true);
-            
+
         }
 
         return view('admin.faculties.index');
@@ -68,14 +68,14 @@ class FacultiesController extends Controller
             $message = 'Faculty added successfully';
             $notification = array(
                 'success' => $message
-            );    
+            );
         } else {
             $message = 'Something went wrong';
             $notification = array(
                 'error' => $message
             );
         }
-        
+
         return redirect()->route('admin.faculties.index')->with($notification);
     }
 
@@ -106,14 +106,14 @@ class FacultiesController extends Controller
             $message = 'Faculty updated successfully';
             $notification = array(
                 'success' => $message
-            );    
+            );
         } else {
             $message = 'Something went wrong';
             $notification = array(
                 'error' => $message
             );
         }
-        
+
         return redirect()->route('admin.faculties.index')->with($notification);
     }
 
@@ -124,7 +124,7 @@ class FacultiesController extends Controller
     {
         if($faculty->status == 1){
             $faculty->status = 0;
-            
+
             if($faculty->update()){
                 return response(['success', 200]);
             }

@@ -3,10 +3,10 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        Staff List
+        User List
     </div>
     <div class="card-body">
-        <a class="btn btn-primary mb-3" href="{{ route('admin.staffs.create') }}">Add Staff</a>
+        <a class="btn btn-primary mb-3" href="{{ route('admin.users.create') }}">Add User</a>
         <table class="table" id="datatable" width="100%">
             <thead>
                 <tr>
@@ -33,7 +33,7 @@
         var dataTable = $('#datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('admin.staffs.index') }}", // Replace with your route for fetching staff data
+            ajax: "{{ route('admin.users.index') }}", // Replace with your route for fetching user data
             columns: [
                 { data: 'id', name: 'id' },
                 { data: 'image', name: 'image', orderable: false, searchable: false },

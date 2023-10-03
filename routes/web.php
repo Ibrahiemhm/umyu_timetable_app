@@ -21,15 +21,10 @@ Auth::routes();
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
     // Home Controller
     Route::get('/', 'HomeController@index')->name('dashboard');
-<<<<<<< Updated upstream
-    Route::resource('staffs', 'StaffsController');
-});
-=======
->>>>>>> Stashed changes
 
     // Users Controller
     Route::resource('users', 'UsersController');
-    
+
     // Beginning of Configurations Route
     Route::group(['prefix' => 'configurations'], function () {
         Route::resource('faculties', 'FacultiesController');

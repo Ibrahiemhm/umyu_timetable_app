@@ -16,10 +16,10 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        Add Staff
+        Add User
     </div>
     <div class="card-body">
-        <form method="POST" action="{{ route('admin.staffs.store') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('admin.users.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="row">
               <div class="col-md-6">

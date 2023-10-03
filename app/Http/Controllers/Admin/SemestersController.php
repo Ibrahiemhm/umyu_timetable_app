@@ -44,7 +44,7 @@ class SemestersController extends Controller
             $table->rawColumns(['actions']);
 
             return $table->make(true);
-            
+
         }
 
         return view('admin.semesters.index');
@@ -68,14 +68,14 @@ class SemestersController extends Controller
             $message = 'Semester added successfully';
             $notification = array(
                 'success' => $message
-            );    
+            );
         } else {
             $message = 'Something went wrong';
             $notification = array(
                 'error' => $message
             );
         }
-        
+
         return redirect()->route('admin.semesters.index')->with($notification);
     }
 
@@ -106,14 +106,14 @@ class SemestersController extends Controller
             $message = 'Semester updated successfully';
             $notification = array(
                 'success' => $message
-            );    
+            );
         } else {
             $message = 'Something went wrong';
             $notification = array(
                 'error' => $message
             );
         }
-        
+
         return redirect()->route('admin.semesters.index')->with($notification);
     }
 
@@ -124,7 +124,7 @@ class SemestersController extends Controller
     {
         if($semester->status == 1){
             $semester->status = 0;
-            
+
             if($semester->update()){
                 return response(['success', 200]);
             }
