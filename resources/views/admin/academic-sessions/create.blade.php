@@ -3,10 +3,10 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        Add Course Category
+        Add Academic Session
     </div>
     <div class="card-body">
-        <form method="POST" action="{{ route('admin.course-categories.store') }}" >
+        <form method="POST" action="{{ route('admin.academic-sessions.store') }}" >
             @csrf
             <div class="row">
               <div class="col-md-4">

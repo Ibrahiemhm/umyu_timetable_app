@@ -3,15 +3,17 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        Course Category List
+        Academic Session List
     </div>
     <div class="card-body">
-        <a class="btn btn-primary mb-3" href="{{ route('admin.course-categories.create') }}">Add Course Category</a>
+        <a class="btn btn-primary mb-3" href="{{ route('admin.academic-sessions.create') }}">Add Academic Session</a>
         <table class="table" id="datatable" width="100%">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Title</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -29,10 +31,12 @@
         var dataTable = $('#datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('admin.course-categories.index') }}", // Replace with your route for fetching data
+            ajax: "{{ route('admin.academic-sessions.index') }}", // Replace with your route for fetching data
             columns: [
                 { data: 'id', name: 'id' },
                 { data: 'title', name: 'title' },
+                { data: 'start_date', name: 'start_date' },
+                { data: 'end_date', name: 'end_date' },
                 { data: 'status', name: 'status' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ]

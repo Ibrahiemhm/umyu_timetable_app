@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\AcademicSession;
 use Yajra\DataTables\Facades\DataTables;
-use App\Http\Requests\StoreCourseCategoryRequest;
-use App\Http\Requests\UpdateCourseCategoryRequest;
+use App\Http\Requests\StoreAcademicSessionRequest;
+use App\Http\Requests\UpdateAcademicSessionRequest;
+use Carbon\Carbon;
 
 class AcademicSessionsController extends Controller
 {
@@ -17,13 +18,13 @@ class AcademicSessionsController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = CourseCategory::all();
+            $query = AcademicSession::all();
             $table = Datatables::of($query);
 
             $table->addColumn('actions', '&nbsp;');
 
             $table->editColumn('actions', function ($row) {
-                $crudRoutePart = 'course-categories';
+                $crudRoutePart = 'academic-sessions';
 
                 return view('partials.datatablesActions', compact(
                     'crudRoutePart',
@@ -37,6 +38,12 @@ class AcademicSessionsController extends Controller
             $table->editColumn('title', function ($row) {
                 return $row->title ? $row->title : "";
             });
+            $table->editColumn('start_date', function ($row) {
+                return $row->start_date ? $row->start_date : "";
+            });
+            $table->editColumn('end_date', function ($row) {
+                return $row->end_date ? $row->end_date : "";
+            });
             $table->editColumn('status', function ($row) {
                 return $row->status ? ($row->status == 1 ? "Enabled" : "Disabled") : "Disabled";
             });
@@ -47,7 +54,7 @@ class AcademicSessionsController extends Controller
             
         }
 
-        return view('admin.course-categories.index');
+        return view('admin.academic-sessions.index');
     }
 
     /**
@@ -55,17 +62,17 @@ class AcademicSessionsController extends Controller
      */
     public function create()
     {
-        return view('admin.course-categories.create');
+        return view('admin.academic-sessions.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCourseCategoryRequest $request)
+    public function store(StoreAcademicSessionRequest $request)
     {
-        $courseCategory = CourseCategory::create($request->all());
-        if($courseCategory){
-            $message = 'Course category added successfully';
+        $academicSession = AcademicSession::create($request->all());
+        if($academicSession){
+            $message = 'Academic Session added successfully';
             $notification = array(
                 'success' => $message
             );    
@@ -76,34 +83,34 @@ class AcademicSessionsController extends Controller
             );
         }
         
-        return redirect()->route('admin.course-categories.index')->with($notification);
+        return redirect()->route('admin.academic-sessions.index')->with($notification);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(CourseCategory $courseCategory)
+    public function show(AcademicSession $academicSession)
     {
-        return view('admin.course-categories.show', compact('courseCategory'));
+        return view('admin.academic-sessions.show', compact('academicSession'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CourseCategory $courseCategory)
+    public function edit(AcademicSession $academicSession)
     {
-        return view('admin.course-categories.edit', compact('courseCategory'));
+        return view('admin.academic-sessions.edit', compact('academicSession'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCourseCategoryRequest $request, CourseCategory $courseCategory)
+    public function update(UpdateAcademicSessionRequest $request, AcademicSession $academicSession)
     {
-        $courseCategory->update($request->all());
+        $academicSession->update($request->all());
 
-        if($courseCategory){
-            $message = 'Course category updated successfully';
+        if($academicSession){
+            $message = 'Academic session updated successfully';
             $notification = array(
                 'success' => $message
             );    
@@ -114,24 +121,24 @@ class AcademicSessionsController extends Controller
             );
         }
         
-        return redirect()->route('admin.course-categories.index')->with($notification);
+        return redirect()->route('admin.academic-sessions.index')->with($notification);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CourseCategory $courseCategory)
+    public function destroy(AcademicSession $academicSession)
     {
-        if($courseCategory->status == 1){
-            $courseCategory->status = 0;
+        if($academicSession->status == 1){
+            $academicSession->status = 0;
             
-            if($courseCategory->update()){
+            if($academicSession->update()){
                 return response(['success', 200]);
             }
         } else {
-            $courseCategory->status = 1;
+            $academicSession->status = 1;
 
-            if($courseCategory->update()){
+            if($academicSession->update()){
                 return response(['success', 200]);
             }
         }
