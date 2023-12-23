@@ -19,7 +19,7 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{{ route('admin.lectures-timetable.index') }}">
+      <a class="nav-link" href="{{ route('admin.lecture-timetable.index') }}">
         <i class="mdi mdi-grid-large menu-icon"></i>
         <span class="menu-title">Lectures Timetable</span>
       </a>

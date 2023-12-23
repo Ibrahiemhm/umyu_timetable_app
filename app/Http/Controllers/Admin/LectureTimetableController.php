@@ -4,16 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\ExamTimetable;
+use App\Models\LectureTimetable;
 use App\Models\Course;
 use App\Models\Venue;
 use Yajra\DataTables\Facades\DataTables;
-use App\Http\Requests\StoreExamTimetableRequest;
-use App\Http\Requests\UpdateExamTimetableRequest;
+use App\Http\Requests\StoreLectureTimetableRequest;
+use App\Http\Requests\UpdateLectureTimetableRequest;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
-class ExamTimetableController extends Controller
+class LectureTimetableController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,13 +21,13 @@ class ExamTimetableController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = ExamTimetable::all();
+            $query = LectureTimetable::all();
             $table = Datatables::of($query);
 
             $table->addColumn('actions', '&nbsp;');
 
             $table->editColumn('actions', function ($row) {
-                $crudRoutePart = 'exam-timetable';
+                $crudRoutePart = 'lecture-timetable';
 
                 return view('partials.datatablesActions', compact(
                     'crudRoutePart',
@@ -60,7 +60,7 @@ class ExamTimetableController extends Controller
             
         }
 
-        return view('admin.exam-timetable.index');
+        return view('admin.lecture-timetable.index');
     }
 
     /**
@@ -71,13 +71,13 @@ class ExamTimetableController extends Controller
         $courses = Course::where('status', 1)->select('id', 'title')->get();
         $venues = Venue::where('status', 1)->select('id', 'title')->get();
 
-        return view('admin.exam-timetable.create', compact('courses', 'venues'));
+        return view('admin.lecture-timetable.create', compact('courses', 'venues'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreExamTimetableRequest $request)
+    public function store(StoreLectureTimetableRequest $request)
     {
         $exists = $this->checkForDuplicates($request);
         // dd($exists);
@@ -89,10 +89,10 @@ class ExamTimetableController extends Controller
 
             return redirect()->back()->with($notification);
         } else {
-            $examTimetable = ExamTimetable::create($request->all());
+            $lectureTimetable = LectureTimetable::create($request->all());
             
-            if($examTimetable){
-                $message = 'Exam Timetable added successfully';
+            if($lectureTimetable){
+                $message = 'Lecture Timetable added successfully';
                 $notification = array(
                     'success' => $message
                 );    
@@ -105,7 +105,7 @@ class ExamTimetableController extends Controller
         }
         
         
-        return redirect()->route('admin.exam-timetable.index')->with($notification);
+        return redirect()->route('admin.lecture-timetable.index')->with($notification);
     }
 
     /**
@@ -113,32 +113,60 @@ class ExamTimetableController extends Controller
      */
     public function checkForDuplicates(Request $request)
     {
-        $exists = ExamTimetable::where('course_id', $request->course_id)
-                           ->where('venue_id', $request->venue_id)
-                           ->where('date', $request->date)
-                           ->where('start_time', '<=', $request->start_time)
-                           ->where('end_time', '>=', $request->end_time)
-                           ->exists();
+        // Check if the same course is scheduled at the same venue and time
+        $sameCourseExists = LectureTimetable::where('course_id', $request->course_id)
+                            ->where('venue_id', $request->venue_id)
+                            ->where('date', $request->date)
+                            ->where(function($query) use ($request) {
+                                $query->where(function($q) use ($request) {
+                                    $q->where('start_time', '<=', $request->start_time)
+                                      ->where('end_time', '>', $request->start_time);
+                                })
+                                ->orWhere(function($q) use ($request) {
+                                    $q->where('start_time', '<', $request->end_time)
+                                      ->where('end_time', '>=', $request->end_time);
+                                });
+                            })
+                            ->exists();
+
+        // Check if any other course is scheduled at the same venue and time
+        $otherCourseExists = LectureTimetable::where('venue_id', $request->venue_id)
+                            ->where('date', $request->date)
+                            ->where(function($query) use ($request) {
+                                $query->where(function($q) use ($request) {
+                                    $q->where('start_time', '<=', $request->start_time)
+                                      ->where('end_time', '>', $request->start_time);
+                                })
+                                ->orWhere(function($q) use ($request) {
+                                    $q->where('start_time', '<', $request->end_time)
+                                      ->where('end_time', '>=', $request->end_time);
+                                });
+                            })
+                            ->where('course_id', '<>', $request->course_id)
+                            ->exists();
+
+        // Combine the checks
+        $exists = $sameCourseExists || $otherCourseExists;
 
         return response()->json(['exists' => $exists]);
     }
 
-    public function show(ExamTimetable $examTimetable)
+    public function show(LectureTimetable $lectureTimetable)
     {
-        return view('admin.exam-timetable.show', compact('examTimetable'));
+        return view('admin.lecture-timetable.show', compact('lectureTimetable'));
     }
 
     public function showTimetable()
     {
         // Get the earliest and latest dates from the timetable entries
-    $startDate = ExamTimetable::min('date');
-    $endDate = ExamTimetable::max('date');
+    $startDate = LectureTimetable::min('date');
+    $endDate = LectureTimetable::max('date');
 
     // Create a date range from the earliest to the latest date
     $dateRange = CarbonPeriod::create($startDate, $endDate);
 
     // Get distinct time slots (hours) from the start_time field
-    $timeSlots = ExamTimetable::selectRaw('TIME_FORMAT(start_time, "%H:%i") as start_time, TIME_FORMAT(end_time, "%H:%i") as end_time')
+    $timeSlots = LectureTimetable::selectRaw('TIME_FORMAT(start_time, "%H:%i") as start_time, TIME_FORMAT(end_time, "%H:%i") as end_time')
                        ->distinct()
                        ->orderBy('start_time')
                        ->orderBy('end_time')
@@ -157,7 +185,7 @@ class ExamTimetableController extends Controller
 }
 
     // Populate the matrix with timetable data
-    $timetables = ExamTimetable::with(['course', 'venue'])->get();
+    $timetables = LectureTimetable::with(['course', 'venue'])->get();
     foreach ($timetables as $timetable) {
     $date = Carbon::parse($timetable->date)->format('Y-m-d');
     $timeSlotKey = Carbon::parse($timetable->start_time)->format('H:i') . ' - ' . Carbon::parse($timetable->end_time)->format('H:i');
@@ -167,26 +195,26 @@ class ExamTimetableController extends Controller
     }
 }
 
-        return view('admin.exam-timetable.view', compact('timetableMatrix', 'timeSlots'));
+        return view('admin.lecture-timetable.view', compact('timetableMatrix', 'timeSlots'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ExamTimetable $examTimetable)
+    public function edit(LectureTimetable $lectureTimetable)
     {
-        return view('admin.exam-timetable.edit', compact('examTimetable'));
+        return view('admin.lecture-timetable.edit', compact('lectureTimetable'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateExamTimetableRequest $request, ExamTimetable $examTimetable)
+    public function update(UpdateLectureTimetableRequest $request, LectureTimetable $lectureTimetable)
     {
-        $examTimetable->update($request->all());
+        $lectureTimetable->update($request->all());
 
-        if($examTimetable){
-            $message = 'Exam Timetable updated successfully';
+        if($lectureTimetable){
+            $message = 'Lecture Timetable updated successfully';
             $notification = array(
                 'success' => $message
             );    
@@ -197,24 +225,24 @@ class ExamTimetableController extends Controller
             );
         }
         
-        return redirect()->route('admin.exam-timetable.index')->with($notification);
+        return redirect()->route('admin.lecture-timetable.index')->with($notification);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ExamTimetable $examTimetable)
+    public function destroy(LectureTimetable $lectureTimetable)
     {
-        if($examTimetable->status == 1){
-            $examTimetable->status = 0;
+        if($lectureTimetable->status == 1){
+            $lectureTimetable->status = 0;
             
-            if($examTimetable->update()){
+            if($lectureTimetable->update()){
                 return response(['success', 200]);
             }
         } else {
-            $examTimetable->status = 1;
+            $lectureTimetable->status = 1;
 
-            if($examTimetable->update()){
+            if($lectureTimetable->update()){
                 return response(['success', 200]);
             }
         }

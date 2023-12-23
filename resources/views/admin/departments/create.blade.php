@@ -22,7 +22,7 @@
         <form method="POST" action="{{ route('admin.departments.store') }}" >
             @csrf
             <div class="row">
-                <div class="col-md-6">
+              <div class="col-md-6">
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Faculty</label>
                   <div class="col-sm-9">

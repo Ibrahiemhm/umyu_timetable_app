@@ -7,7 +7,7 @@
       <img src="images/umyu_logo-300x300.png" alt="logo">
     </div>
     <h4>Welcome to UMYUK Timetable Management System!</h4>
-    <h6 class="font-weight-light">Sign into your account to proceed</h6>
+    <h6 class="font-weight-light">Create an account to proceed</h6>
     <form method="POST" action="{{ route('register') }}">
       @csrf
 

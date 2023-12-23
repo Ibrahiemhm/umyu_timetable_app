@@ -41,9 +41,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Venue Route
     Route::resource('venues', 'VenuesController');
 
-    // Lectures Timetable Route
-    Route::resource('lectures-timetable', 'LecturesTimetableController');
-
     // Exam Timetable Route
+    Route::get('exam-timetable/view', 'ExamTimetableController@showTimetable')->name('exam-timetable.view');
     Route::resource('exam-timetable', 'ExamTimetableController');
+    Route::post('exam-timetable/check-duplicates', 'ExamTimetableController@checkForDuplicates')->name('exam-timetable.checkDuplicates');
+
+    // Lecture Timetable Route
+    Route::get('lecture-timetable/view', 'LectureTimetableController@showTimetable')->name('lecture-timetable.view');
+    Route::resource('lecture-timetable', 'LectureTimetableController');
+    Route::post('lecture-timetable/check-duplicates', 'LectureTimetableController@checkForDuplicates')->name('lecture-timetable.checkDuplicates');
+
 });
